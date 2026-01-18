@@ -35,7 +35,7 @@ docker exec -it ChatAPI alembic upgrade head
 ```
 # 6) Запуск тестов - pytest внутри контейнера app:
 ```python 
-docker exec -it ChatAPI > python -m pytest tests/test_chats.py -v 
+docker exec -it ChatAPI python -m pytest tests/test_chats.py -v 
 ```
 # 7) После запуска приложение доступно по адресу:
 http://localhost:8000/docs

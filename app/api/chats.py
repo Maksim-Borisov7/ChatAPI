@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, status
 from app.dependencies.repositories import (
     get_create_chat_use_case,
@@ -64,7 +66,7 @@ async def send_message_in_chat(
 @router.get("/{id}", response_model=ChatWithMessagesResponseSchema)
 async def get_chat_with_messages(
     id: int,
-    limit: int,
+    data: Annotated[ChatWithMessagesSchema,Depends()],
     use_case: GetChatUseCase = Depends(get_chat_use_case),
 ) -> ChatWithMessagesResponseSchema:
     """
@@ -82,8 +84,7 @@ async def get_chat_with_messages(
         HTTPException 404: Если чат с указанным ID не найден.
         HTTPException 500: Если возникла ошибка при получении сообщений.
     """
-    data = ChatWithMessagesSchema(id=id, limit=limit)
-    chat, messages = await use_case.execute(data)
+    chat, messages = await use_case.execute(id, data.limit)
     return ChatWithMessagesResponseSchema(
         id=chat.id,
         title=chat.title,

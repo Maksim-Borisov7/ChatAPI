@@ -26,7 +26,7 @@ class GetChatUseCase:
         self.chat_repo = chat_repo
         self.message_repo = message_repo
 
-    async def execute(self, data: ChatWithMessagesSchema) -> tuple[ChatModels, list[MessageModels]]:
+    async def execute(self, id, limit: int) -> tuple[ChatModels, list[MessageModels]]:
         """
         Получить чат и последние N сообщений.
 
@@ -42,24 +42,24 @@ class GetChatUseCase:
             HTTPException 404: Если чат с указанным ID не найден.
             HTTPException 500: Если произошла ошибка при получении сообщений.
         """
-        logger.info(f"Запрос на получение чата id={data.id} с последними {data.limit} сообщениями")
+        logger.info(f"Запрос на получение чата id={id} с последними {limit} сообщениями")
 
-        chat = await self.chat_repo.get_chat(data.id)
+        chat = await self.chat_repo.get_chat(id)
         if not chat:
-            logger.warning(f"Чат с id={data.id} не найден")
+            logger.warning(f"Чат с id={id} не найден")
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Chat with id={data.id} not found"
+                detail=f"Chat with id={id} not found"
             )
 
         try:
-            messages = await self.message_repo.get_last_messages(data.id, data.limit)
-            logger.info(f"Получено {len(messages)} сообщений для чата id={data.id}")
+            messages = await self.message_repo.get_last_messages(id, limit)
+            logger.info(f"Получено {len(messages)} сообщений для чата id={id}")
         except Exception as e:
-            logger.error(f"Ошибка при получении сообщений для чата id={data.id}: {str(e)}")
+            logger.error(f"Ошибка при получении сообщений для чата id={id}: {str(e)}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Could not get messages for chat id={data.id}: {str(e)}"
+                detail=f"Could not get messages for chat id={id}: {str(e)}"
             )
 
         return chat, messages

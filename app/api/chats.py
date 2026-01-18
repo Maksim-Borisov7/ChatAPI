@@ -74,7 +74,7 @@ async def get_chat_with_messages(
 
     Args:
         id (int): ID чата.
-        limit (int): Количество сообщений для возврата (по умолчанию 20, максимум 100).
+        data (ChatWithMessagesSchema): Cхема Pydantic сообщений для возврата (по умолчанию 20, максимум 100).
         use_case (GetChatUseCase): UseCase для получения чата и сообщений.
 
     Returns:

@@ -1,0 +1,24 @@
+services:
+  app:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    container_name: ChatAPI
+    ports:
+      - "8000:8000"
+    environment:
+      PG_URL: ${PG_URL}
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: psgr
+    environment:
+      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_USER: ${USER}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5433:5432"
+    env_file:
+      - .env

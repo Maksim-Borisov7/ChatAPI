@@ -2,7 +2,6 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.database.db import db
 from app.logs.logger import logger
 from app.api.chats import router as chats_router
 

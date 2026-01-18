@@ -29,11 +29,6 @@ class Database:
             logger.exception(f"Ошибка при создании сессии: {e}")
             raise
 
-    async def create_table(self):
-        """Создает таблицы в базе данных."""
-        async with self.engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-
 
 db = Database(
     url=settings.pg_url,
